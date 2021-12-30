@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,15 +23,14 @@ import java.util.Scanner;
 public class MainMusic {
     	
     	// Important stuff 
-    	final String[] sharpNotes = {"A", "A#", "B", "B#", "C", "D", "E", "F", "G"}; 
+    final String[] sharpNotes = {"A", "A#", "B", "B#", "C", "D", "E", "F", "G"}; 
 	final String[] flatNotes = {"A", "A#", "B", "B#", "C", "D", "E", "F", "G"}; 
-	final String[] validKeySignatures = {}; 
 	
-	// User responses 
-	
+
 	
     public static void main(String[]args) { 
 	// User responses 
+	String validKeySignatures [] = {"C","G","D","A", "E", "B", "Cb","F#", "Gb", "Db", "C#", "Ab", "Eb", "Bb", "F"};
 	String begin = ""; 
 	String chosenKey = ""; 
 	int chosenNote = -1;
@@ -46,13 +46,31 @@ public class MainMusic {
 	    System.out.println("Enter in a key and a scale tone (1-8)");
 	    System.out.println("Key:");
 	    chosenKey= kb.next(); 
+	    if(!arrayContains(validKeySignatures, chosenKey)) { 
+		
+		while(!arrayContains(validKeySignatures, chosenKey)) {
+		    System.out.println("Please chose another key");
+		    chosenKey = kb.next();
+		}
+		
+	    }
+	    
 	    System.out.println("Note:");
 	    chosenNote = kb.nextInt();
+	    if(chosenNote < 1 || chosenNote > 8) {
+		
+		while (chosenNote < 1 || chosenNote > 8){
+			System.out.println("Please choose another note");
+			chosenNote = kb.nextInt(); 
+		}
+		
+	    }
+	    
 	    System.out.println("Calculating...");
 	    System.out.println("...");
 	    System.out.println("...");
-	    System.out.println((getNote(chosenKey, chosenNote)));
-	 
+	    // System.out.println((getNote(chosenKey, chosenNote)));
+	    System.out.println("You chose the " + printScaleTone(chosenNote) + " of " + chosenKey +" major!");
 	    
 	    
 	    // Testing key and getNote() 
@@ -66,8 +84,15 @@ public class MainMusic {
     
     /*
      * gets a specific note from a given key  
+     * As of right now, this only handles major keys 
      */
     public static String getNote(String key, int note) { 
+	
+	String allNotes[] = {"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G","G#", 
+			     "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G","G#",};
+	
+	// formedKey An easy way to get the entire scale 
+	String formedKey[] = null; 
 	
 	// Error checking 
 	if(!validKey(key) && (!validNote(note))) {
@@ -76,18 +101,97 @@ public class MainMusic {
 	
 	if(!validKey(key)) { 
 	    return "Try another key"; 
-	}
+	} 
 	
-	if(!validNote(note)) { 
+	else if(!validNote(note)) { 
 	    return "Try another scale tone"; 
 	}
 	
+	if(findFirstInstance(allNotes, key) == -1) { 
+	    return "Something wrong happened"; 
+	}
 	
+	else { 
+	    
+	    // Setting the first note to the passed in note 
+	    formedKey[0] = key; 
+
+		// getting to the key in allNotes 
+		for(int i = 0; i < findFirstInstance(allNotes, key); i++){ 
+			allNotes[i] = null;
+		}
+
+		int a = -1; 
+		while(allNotes[a] == null){ 
+			a++; 
+		}
+
+		// I know there is probably a better way to do this, but that's a problem for future me 
+		a = a + 2; 
+		formedKey[1] = allNotes[a];
+		a = a + 2;  	
+		formedKey[2] = allNotes[a]; 
+		a = a + 1; 
+		formedKey[3] = allNotes[a]; 
+		a = a + 2;
+		formedKey[4] = allNotes[a]; 
+		a = a + 2; 
+		formedKey[5] = allNotes[a];
+		a = a + 2; 
+		formedKey[6] = allNotes[a]; 
+		a = a + 1;
+		formedKey[7] = allNotes[a]; 
+
+	}
 	
+	return formedKey[note-1];
 	
+    }
+    
+    
+    /*
+     * Helper method to work with the various scale tones to provide more information 
+     */
+    public static String printScaleTone(int number) { 
+	// Tonic, Supertonic, Mediant, Subdominant, Dominant,  Submediant, Leading Note
+	switch(number) { 
+	case 1: 
+		return " tonic ";	
+	case 2: 
+		return " supertonic "; 		
+	case 3:
+		return " mediant ";
+	case 4: 
+		return " subdominant ";	
+	case 5: 
+	    	return " dominant ";
+	case 6: 
+		return " submediant ";		
+	case 7:
+		return " leading tone "; 		
+	default: 
+		return " Error loading note ";  
+	}
 	
+    }
+    
+    /*
+     * Finds the first instance of the object and returns its index in the array 
+     */
+    public static int findFirstInstance(String[]array, Object o) {
 	
-	return "Placeholder note";
+	if(!arrayContains(array, o)) { 
+	    return -1; 
+	} 
+	else { 
+	    for(int a = 0; a < array.length; a++) { 
+		if(array[a] == o) { 
+		    return a; 
+		}
+	    }
+	}
+	
+	return -1;
 	
     }
     
