@@ -1,7 +1,3 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 /*
@@ -23,7 +19,7 @@ import java.util.Scanner;
 public class MainMusic {
     	
     	// Important stuff 
-    final String[] sharpNotes = {"A", "A#", "B", "B#", "C", "D", "E", "F", "G"}; 
+    	final String[] sharpNotes = {"A", "A#", "B", "B#", "C", "D", "E", "F", "G"}; 
 	final String[] flatNotes = {"A", "A#", "B", "B#", "C", "D", "E", "F", "G"}; 
 	
 
@@ -33,25 +29,27 @@ public class MainMusic {
 	String validKeySignatures [] = {"C","G","D","A", "E", "B", "Cb","F#", "Gb", "Db", "C#", "Ab", "Eb", "Bb", "F"};
 	String begin = ""; 
 	String chosenKey = ""; 
+	String moreInfo = "";
 	int chosenNote = -1;
+	@SuppressWarnings("resource")
 	Scanner kb = new Scanner(System.in);
 	
 	System.out.println("Would you like to start?");
+	System.out.println("( YES / NO )");
 	begin = kb.next(); 
 	
-	if(begin.equalsIgnoreCase("yes")) { 
+	while (begin.equalsIgnoreCase("yes")) { 
 	    
-	    System.out.println("Awesome. Lets begin.");
-	    System.out.println();
+	    System.out.println("Awesome. Lets begin." + "\n");
 	    System.out.println("Enter in a key and a scale tone (1-8)");
 	    System.out.println("Key:");
 	    chosenKey= kb.next(); 
-	    if(!arrayContains(validKeySignatures, chosenKey)) { 
+	    if(arrayContains(validKeySignatures, chosenKey)) { 
 		
-		while(!arrayContains(validKeySignatures, chosenKey)) {
+		// while(!arrayContains(validKeySignatures, chosenKey)) {
 		    System.out.println("Please chose another key");
 		    chosenKey = kb.next();
-		}
+		// }
 		
 	    }
 	    
@@ -59,26 +57,36 @@ public class MainMusic {
 	    chosenNote = kb.nextInt();
 	    if(chosenNote < 1 || chosenNote > 8) {
 		
-		while (chosenNote < 1 || chosenNote > 8){
+		// while (chosenNote < 1 || chosenNote > 8){
 			System.out.println("Please choose another note");
 			chosenNote = kb.nextInt(); 
-		}
+		// }
 		
 	    }
 	    
-	    System.out.println("Calculating...");
-	    System.out.println("...");
-	    System.out.println("...");
+	    System.out.println("Calculating..." + "\n" + "..." + "\n" + "..." + "\n" + "...");
 	    // System.out.println((getNote(chosenKey, chosenNote)));
-	    System.out.println("You chose the " + printScaleTone(chosenNote) + " of " + chosenKey +" major!");
+	    System.out.println("You chose the" + printScaleTone(chosenNote) + "of " + chosenKey +" major!");
+	    
+	    System.out.println("Would you like to know more information about the note? ( YES / NO )");
+	    moreInfo = kb.next(); 
+	    if(moreInfo.equalsIgnoreCase("YES")) { 
+		
+	    }
+
 	    
 	    
-	    // Testing key and getNote() 
-	    
-	} else { 
+	    System.out.println("\n");
+	    // Repeat seqence 
+	    System.out.println("Would you like to go again? ( YES / NO )");
+	    begin = kb.next();
+	    	    
+	} 
+	
+	// { 
 	    System.out.println("Goodbye");
 	    System.exit(0);
-	}	
+	// }	
 	
     }
     
@@ -86,6 +94,7 @@ public class MainMusic {
      * gets a specific note from a given key  
      * As of right now, this only handles major keys 
      */
+    @SuppressWarnings("null")
     public static String getNote(String key, int note) { 
 	
 	String allNotes[] = {"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G","G#", 
@@ -199,12 +208,14 @@ public class MainMusic {
      * Returns true if the key passed in is in the array 
      */
     public static boolean arrayContains(String[] array, Object o) {
+	boolean arrayContainsBool = false; 
+
 	for(int a = 0; a < array.length; a++) { 
 	    if(array[a] == o) { 
-		return true;
-	    }
+		arrayContainsBool = true;
+	    } 
 	}
-	return false; 
+	return arrayContainsBool; 
     }
     
    
